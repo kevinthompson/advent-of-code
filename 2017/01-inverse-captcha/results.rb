@@ -1,4 +1,10 @@
-Dir[File.expand_path(File.dirname(__FILE__)) + '/solution/*.rb'].each { |file| require file }
-input = File.open('input.txt').read
-solution = Solution.new(input)
-solution.results.each { |result| print "#{result}\n" }
+require_relative 'lib/inverse_captcha'
+
+input = File.open(File.join(File.dirname(__FILE__), 'input.txt')).read.strip
+captcha = InverseCaptcha.new(input: input)
+
+captcha.strategy = InverseCaptcha::Strategy::Siblings
+print "Siblings Strategy: #{captcha.result}\n"
+
+captcha.strategy = InverseCaptcha::Strategy::Diameter
+print "Diameter Strategy: #{captcha.result}\n"
