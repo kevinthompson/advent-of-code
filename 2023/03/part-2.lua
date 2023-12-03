@@ -1,4 +1,4 @@
-input_path = "input-tanner"
+input_path = "input"
 sum = 0
 
 lines = {}
