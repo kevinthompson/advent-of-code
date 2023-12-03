@@ -1,6 +1,5 @@
-input_path = "input-tanner"
+input_path = "input"
 sum = 0
-invalid = 0
 
 lines = {}
 for line in io.lines(input_path) do
@@ -27,12 +26,9 @@ for index,line in ipairs(lines) do
     or symbol_in_range(line, i-1, j)
     or symbol_in_range(lines[index + 1], i-1, j) then
       sum = sum + tonumber(numeric)
-    else
-      invalid = invalid + 1
     end
   end
 end
 
 -- Expected for sample: 4361
 print("Result: " .. sum)
-print("Invalid: " .. invalid)
