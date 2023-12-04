@@ -1,7 +1,6 @@
 input_path = "input"
 sum = 0
 
-lines = {}
 for line in io.lines(input_path) do
   local line = line:gsub("Card%s+%d+: ","")
   local div = line:find("|")
