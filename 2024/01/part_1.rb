@@ -1,4 +1,4 @@
-input = File.read(File.join(__dir__, 'input'))
+input = File.read(File.join(__dir__, 'input.txt'))
 
 print input
   .split("\n")

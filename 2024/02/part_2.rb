@@ -1,4 +1,4 @@
-File.read(File.join(__dir__, 'input'))
+File.read(File.join(__dir__, 'input.txt'))
     .split("\n")
     .map(&:split)
     .count do |group|

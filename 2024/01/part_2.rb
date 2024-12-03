@@ -1,4 +1,4 @@
-input = File.read(File.join(__dir__, 'input'))
+input = File.read(File.join(__dir__, 'input.txt'))
 lists = input.split("\n").map(&:split).transpose.map(&:sort)
 occurrences = lists[1].tally
 
