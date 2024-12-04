@@ -2,6 +2,8 @@ Metrics/AbcSize:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
+Naming/MethodParameterName
+  Enabled: false
 Style/Documentation:
   Enabled: false
 Style/FrozenStringLiteralComment:
