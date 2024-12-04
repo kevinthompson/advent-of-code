@@ -1,4 +1,7 @@
+require 'faraday'
+
 TEMPLATE_DIRECTORY = '.template'.freeze
+COOKIE_PATH = "#{__dir__}/.cookie".freeze
 
 task :new, [:name] do
   # Determine new directory
@@ -9,6 +12,19 @@ task :new, [:name] do
   # Duplicate template
   FileUtils.mkdir_p(year.to_s)
   FileUtils.cp_r(TEMPLATE_DIRECTORY, destination)
+
+  # Get input
+  if File.exist?(COOKIE_PATH)
+    connection = Faraday.new(
+      url: 'https://adventofcode.com',
+      headers: {
+        'Cookie' => File.read(COOKIE_PATH)
+      }
+    )
+
+    response = connection.get("#{year}/day/#{day}/input")
+    File.open("#{destination}/input.txt", 'wb') { |file| file.write(response.body) }
+  end
 
   # Open part 1 in new directory
   `code -r #{destination}/part_1.rb`
