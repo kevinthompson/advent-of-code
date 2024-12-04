@@ -1,12 +1,29 @@
+require 'rainbow/refinement'
+using Rainbow
+
 class IncorrectSolution < StandardError
-  def message
-    'Result does not match expected answer.'
-  end
+  def message; end
 end
 
-def solve(example_answer:)
+def solve(example: nil)
   dir = File.dirname(caller_locations.first.path)
-  raise IncorrectSolution unless yield(File.read("#{dir}/example.txt")) == example_answer
 
-  puts yield(File.read("#{dir}/input.txt"))
+  unless example.nil?
+    puts 'Running solution against example data...'.yellow
+    result = yield(File.read("#{dir}/example.txt"))
+
+    if result == example
+      puts 'Success!'.green
+    else
+      puts 'Error! Result does not match expected answer.'.red
+      puts "Expected: #{example}"
+      puts "Received: #{result}"
+      return
+    end
+    puts "\n"
+  end
+
+  puts 'Running solution against input data...'.yellow
+  puts "Result: #{yield(File.read("#{dir}/input.txt"))}"
+  puts "\n"
 end

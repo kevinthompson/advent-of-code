@@ -18,7 +18,7 @@ task :new, [:name] do
 end
 
 task :watch do
-  `reset; bundle exec guard`
+  exec 'reset; bundle exec guard'
 end
 
 task default: [:watch]

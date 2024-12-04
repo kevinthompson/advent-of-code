@@ -1,5 +1,5 @@
 require_relative('../../lib/support')
 
-solve example_answer: nil do |input|
+solve example: nil do |input|
   input
 end
