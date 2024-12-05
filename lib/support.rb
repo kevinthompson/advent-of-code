@@ -1,10 +1,6 @@
 require 'rainbow/refinement'
 using Rainbow
 
-class IncorrectSolution < StandardError
-  def message; end
-end
-
 def solve(example: nil)
   dir = File.dirname(caller_locations.first.path)
 
