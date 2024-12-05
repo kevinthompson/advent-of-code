@@ -26,9 +26,6 @@ task :new, [:name] do
     File.open("#{destination}/input.txt", 'wb') { |file| file.write(response.body) }
   end
 
-  # Open part 1 in new directory
-  `code -r #{destination}/part_1.rb`
-
   # Run Guard
   Rake::Task[:watch].invoke
 end
