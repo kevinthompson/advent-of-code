@@ -27,7 +27,7 @@ end
 def draw_grid(grid)
   system 'clear'
   grid.chars.each_with_index do |char, i|
-    print "\n" if i % WIDTH == 0
+    print "\n" if i > 0 && i % WIDTH == 0
     case char
     when 'O'; print char.fg(:black).bg(:yellow)
     when 'X'; print char.fg(:aqua)
@@ -35,4 +35,5 @@ def draw_grid(grid)
     else; print char.fg(:darkslategray)
     end
   end
+  puts
 end

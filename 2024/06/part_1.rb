@@ -1,6 +1,5 @@
 input = File.read("#{__dir__}/example.txt")
 lines = input.lines
-result = 0
 
 WIDTH = lines.first.gsub(/\n/,'').strip.length
 OFFSETS = [-WIDTH, 1, WIDTH, -1]
@@ -34,5 +33,4 @@ def walk_grid(grid)
   return visited
 end
 
-visited = walk_grid(GRID)
-p visited.keys.count
+puts "Result: #{walk_grid(GRID).keys.count}"
