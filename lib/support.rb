@@ -1,25 +1,38 @@
 require 'rainbow/refinement'
 using Rainbow
 
-def solve(example: nil)
-  dir = File.dirname(caller_locations.first.path)
+class Solution
+  attr_reader :input
 
-  unless example.nil?
-    puts 'Running solution against example data...'.yellow
-    result = yield(File.read("#{dir}/example.txt"))
-
-    if result == example
-      puts 'Success!'.green
-    else
-      puts 'Error! Result does not match expected answer.'.red
-      puts "Expected: #{example}"
-      puts "Received: #{result}"
-      return
-    end
-    puts "\n"
+  def initialize(input:)
+    @input = input
+    after_initialize
   end
 
+  def after_initialize
+    :noop
+  end
+
+  def result
+    raise NotImplementedError 
+  end
+end
+
+def solve(solution:, example:, expectation:, input:)
+  puts 'Running solution against example data...'.yellow
+  result = solution.new(input: example).result
+
+  if result == expectation
+    puts 'Success!'.green
+  else
+    puts 'Error! Result does not match expected answer.'.red
+    puts "Expected: #{expectation}"
+    puts "Received: #{result}"
+    return
+  end
+  puts "\n"
+
   puts 'Running solution against input data...'.yellow
-  puts "Result: #{yield(File.read("#{dir}/input.txt"))}"
+  puts "Result: #{solution.new(input:).result}"
   puts "\n"
 end

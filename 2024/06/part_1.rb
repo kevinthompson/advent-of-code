@@ -1,61 +1,38 @@
-require_relative('../../lib/support')
+input = File.read("#{__dir__}/example.txt")
+lines = input.lines
+result = 0
 
-solve example: 41 do |input|
-  result = 1
+WIDTH = lines.first.gsub(/\n/,'').strip.length
+OFFSETS = [-WIDTH, 1, WIDTH, -1]
 
-  # build grid
-  width = input.lines.first.gsub(/\n/, '').size
-  height = input.lines.size
-  grid = Array.new(height) { Array.new(width) }
+GRID = input.gsub(/\n/, '')
+START_INDEX = GRID.index('^')
 
-  direction_symbols = %w[^ > v <]
-  direction_offsets = [[0,-1], [1,0], [0,1], [-1,0]]
+def walk_grid(grid)
+  index = START_INDEX
+  dir = 0
+  visited = {}
 
-  current_x = nil
-  current_y = nil
-  current_dir_index = nil
+  while (0...grid.length).include?(index) do
+    visited[index] ||= 0
+    visited[index] |= (1 << dir)
 
-  input.split("\n").each_with_index do |line, y|
-    line.gsub(/\n/, '').split('').each_with_index do |char, x|
-      if direction_symbols.include?(char)
-        current_x = x
-        current_y = y
-        current_dir_index = direction_symbols.find_index(char)
-        grid[y][x] = 'X'
-      else
-        grid[y][x] = char
-      end
+    break if dir == 3 && index % WIDTH == 0
+    break if dir == 1 && (index + 1) % WIDTH == 0
 
-    end
-  end
+    next_index = index + OFFSETS[dir]
 
-  # until x or y are invalid
-  # move guard in current direction
-  # if next space is obstacle, rotate direction
-  dir = direction_offsets[current_dir_index]
-  next_x = current_x + dir[0]
-  next_y = current_y + dir[1]
-
-  while next_x.between?(0,width - 1) && next_y.between?(0,height - 1) do
-    char = grid[next_y][next_x]
-
-    case char
-    when '#'
-      current_dir_index = (current_dir_index + 1) % direction_offsets.size
-    when '.', 'X'
-      current_x = next_x
-      current_y = next_y
-
-      if char == '.'
-        grid[next_y][next_x] = 'X'
-        result += 1
-      end
+    if grid[next_index] == '#'
+      dir = (dir + 1) % 4
+    else
+      index = next_index
     end
 
-    dir = direction_offsets[current_dir_index]
-    next_x = current_x + dir[0]
-    next_y = current_y + dir[1]
+    yield(visited, next_index, dir) if block_given?
   end
 
-  result
+  return visited
 end
+
+visited = walk_grid(GRID)
+p visited.keys.count

@@ -1,96 +1,48 @@
-require_relative('../../lib/support')
+INPUT = File.read("#{__dir__}/input.txt")
+LINES = INPUT.lines
 
-solve example: 6 do |input|
-  result = 0
+WIDTH = LINES.first.gsub(/\n/,'').strip.length
+OFFSETS = [-WIDTH, 1, WIDTH, -1]
 
-  # build grid
-  width = input.lines.first.gsub(/\n/, '').size
-  height = input.lines.size
-  grid = Array.new(height) { Array.new(width) }
+GRID = INPUT.gsub(/\n/, '')
+START_INDEX = GRID.index('^')
 
-  direction_symbols = %w[^ > v <]
-  direction_offsets = [[0,-1], [1,0], [0,1], [-1,0]]
+result = 0
 
-  current_x = nil
-  current_y = nil
-  current_dir_index = nil
+def walk_grid(grid)
+  index = START_INDEX
+  dir = 0
+  visited = {}
 
-  input.split("\n").each_with_index do |line, y|
-    line.gsub(/\n/, '').split('').each_with_index do |char, x|
-      if direction_symbols.include?(char)
-        current_x = x
-        current_y = y
-        current_dir_index = direction_symbols.find_index(char)
-        grid[y][x] = direction_symbols[current_dir_index]
-      else
-        grid[y][x] = char
-      end
+  while (0...grid.length).include?(index) do
+    visited[index] ||= 0
+    visited[index] |= (1 << dir)
+    next_index = index + OFFSETS[dir]
+    break if dir.odd? && next_index / WIDTH != index / WIDTH
+
+    if grid[next_index] == '#'
+      dir = (dir + 1) % 4
+    else
+      index = next_index
     end
+
+    yield(visited, index, dir) if block_given?
   end
 
-  # until x or y are invalid
-  # move guard in current direction
-  # if next space is obstacle, rotate direction
-  dir = direction_offsets[current_dir_index]
-  next_x = current_x + dir[0]
-  next_y = current_y + dir[1]
-
-  while next_x.between?(0,width - 1) && next_y.between?(0,height - 1)
-    char = grid[next_y][next_x]
-
-    # check for obstacle placement
-    rot_index = (current_dir_index + 1) % 4
-    rot_symbol = direction_symbols[rot_index]
-    rot_dir = direction_offsets[rot_index]
-
-    check_x = current_x + rot_dir[0]
-    check_y = current_y + rot_dir[1]
-
-    while check_x.between?(0,width - 1) && check_y.between?(0,height - 1) do
-      other_char = grid[check_y][check_x] 
-      case other_char
-      when '#'
-        break
-      when rot_symbol
-        result += 1
-        grid[next_y][next_x] = 'O'
-        char = 'O'
-        break
-      end
-
-      check_x += rot_dir[0]
-      check_y += rot_dir[1]
-    end
-
-    # step through grid
-    if char == '#'
-      current_dir_index = (current_dir_index + 1) % direction_offsets.size
-      dir = direction_offsets[current_dir_index]
-      next_x = current_x + dir[0]
-      next_y = current_y + dir[1]
-      char = grid[next_y][next_x]
-    end
-
-    current_x = next_x
-    current_y = next_y
-
-    if char == '.'
-      grid[next_y][next_x] = direction_symbols[current_dir_index]
-    end
-
-    dir = direction_offsets[current_dir_index]
-    next_x = current_x + dir[0]
-    next_y = current_y + dir[1]
-    
-    if input.lines.size < 20
-      puts ''
-      grid.each do |row|
-        puts row.join
-      end
-
-      sleep 1
-    end
-  end
-
-  result
+  visited
 end
+
+visited = walk_grid(GRID)
+blockable_indexes = (visited.keys - [START_INDEX]).uniq
+blockable_indexes.each do |blockable_index|
+  blocked_grid = GRID.dup
+  blocked_grid[blockable_index] = '#'
+  walk_grid(blocked_grid) do |visited, index, dir|
+    if visited[index].to_i & (1 << dir) > 0
+      result += 1
+      break
+    end
+  end
+end
+
+print "Result: #{result}"
