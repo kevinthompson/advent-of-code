@@ -5,44 +5,39 @@ WIDTH = LINES.first.gsub(/\n/,'').strip.length
 OFFSETS = [-WIDTH, 1, WIDTH, -1]
 
 GRID = INPUT.gsub(/\n/, '')
-START_INDEX = GRID.index('^')
+START = GRID.index('^')
 
-result = 0
-
-def walk_grid(grid)
-  index = START_INDEX
-  dir = 0
-  visited = {}
+def walk_grid(grid, start: START, dir: 0, visited: {}, detect_loops: false)
+  path = visited.dup
+  index = start
+  loops = 0
 
   while (0...grid.length).include?(index) do
-    visited[index] ||= 0
-    visited[index] |= (1 << dir)
+    path[index] ||= 0
+    path[index] |= (1 << dir)
     next_index = index + OFFSETS[dir]
+
     break if dir.odd? && next_index / WIDTH != index / WIDTH
+    break if !(0...grid.length).include?(next_index)
 
     if grid[next_index] == '#'
       dir = (dir + 1) % 4
     else
+      if detect_loops && next_index != START
+        loop_grid = grid.dup
+        loop_grid[next_index] = '#'
+        loops += walk_grid(loop_grid, start: index, visited: path, dir:)
+      end
+
       index = next_index
     end
 
-    yield(visited, index, dir) if block_given?
-  end
-
-  visited
-end
-
-visited = walk_grid(GRID)
-blockable_indexes = (visited.keys - [START_INDEX]).uniq
-blockable_indexes.each do |blockable_index|
-  blocked_grid = GRID.dup
-  blocked_grid[blockable_index] = '#'
-  walk_grid(blocked_grid) do |visited, index, dir|
-    if visited[index].to_i & (1 << dir) > 0
-      result += 1
-      break
+    if path[index].to_i & (1 << dir) > 0
+      return 1
     end
   end
+
+  loops
 end
 
-print "Result: #{result}"
+print "Result: #{walk_grid(GRID, detect_loops: true)}"
