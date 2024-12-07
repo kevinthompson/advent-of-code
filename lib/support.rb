@@ -23,3 +23,16 @@ def solve(example: nil)
   puts "Result: #{yield(File.read("#{dir}/input.txt"))}"
   puts "\n"
 end
+
+def draw_grid(grid)
+  system 'clear'
+  grid.chars.each_with_index do |char, i|
+    print "\n" if i % WIDTH == 0
+    case char
+    when 'O'; print char.fg(:black).bg(:yellow)
+    when 'X'; print char.fg(:aqua)
+    when '#'; print char.fg(:white)
+    else; print char.fg(:darkslategray)
+    end
+  end
+end
