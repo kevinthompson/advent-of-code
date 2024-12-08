@@ -1,3 +1,5 @@
 input
 input.txt
+!.template/input.txt
 *.cookie
+
