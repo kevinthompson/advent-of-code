@@ -4,21 +4,20 @@ require_relative('../../lib/support')
 solve example: 34 do |input|
   width = input.lines.first.chomp.length
   grid = input.gsub(/\n/,'')
-  antenna_char_indexes = {}
+  antenna_indexes = {}
   antinode_positions = Set.new
 
   grid.chars.each_with_index do |char, index|
     if char != '.'
-      antenna_char_indexes[char] ||= []
-      antenna_char_indexes[char] << index 
-      grid[index] = '.'
+      antenna_indexes[char] ||= []
+      antenna_indexes[char] << index 
     end
   end
 
-  antenna_char_indexes.each do |char, indexes|
+  antenna_indexes.each_value do |indexes|
     next if indexes.size < 2
 
-    indexes.permutation(2).each do |(a, b)|
+    indexes.combination(2).each do |(a, b)|
       v1 = Vector[a % width, a / width]
       v2 = Vector[b % width, b / width]
       diff = v2 - v1
