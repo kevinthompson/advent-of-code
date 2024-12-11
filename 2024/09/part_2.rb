@@ -15,10 +15,7 @@ solve example: 2858 do |input|
       str = type == :file ? index / 2 : '.'
       chunks[type][blocks.size] = [count, str]
       blocks += Array.new(count, str)
-      p blocks
     end
-
-    return if index > 20
   end
 
   chunks[:file].to_a.reverse.each do |file_index, (file_size, file_id)|
@@ -46,4 +43,6 @@ solve example: 2858 do |input|
   end
 end
 
-# 6432393509374 => too high
+# 6_432_393_509_374 => too high
+# 6_390_781_891_880 => correct
+# 6_369_698_539_417 => too low
