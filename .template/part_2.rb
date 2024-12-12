@@ -14,6 +14,7 @@ class Solution
   end
 end
 
+# Run solution against example and input
 solve example: EXAMPLE_RESULT do |input|
   Solution.new(input:).call
 end
