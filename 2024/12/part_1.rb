@@ -4,11 +4,28 @@ EXAMPLE_RESULT = 1930
 DIRECTIONS = [[0,-1],[1,0],[0,1],[-1,0]]
 
 class Solution
-  attr_reader :grid, :input
+  attr_reader :grid
 
   def initialize(input:)
-    @input = input
+    @grid = input.lines.map(&:chomp).map { |line| line.split('') }
   end
+
+  def call
+    result = 0
+
+    grid.each_with_index do |line, y|
+      line.each_with_index do |char, x|
+        if char != nil && char[0] != '-'
+          area, perimeter = score(char, x, y)
+          result += area * perimeter
+        end
+      end
+    end
+
+    result
+  end
+
+  private
 
   def score(char, x, y)
     directions = DIRECTIONS.dup
@@ -20,11 +37,8 @@ class Solution
       ox, oy = directions.pop
       nx = x + ox
       ny = y + oy
-      neighbor = nil
 
-      if nx.between?(0, grid[0].size - 1) && ny.between?(0,grid.size - 1)
-        neighbor = grid.dig(ny,nx)
-      end
+      neighbor = valid?(nx, ny) ? grid.dig(ny,nx) : nil
 
       if neighbor == char
         next_area, next_perimeter = score(char, nx, ny)
@@ -38,20 +52,8 @@ class Solution
     [area, perimeter]
   end
 
-  def call
-    result = 0
-
-    @grid = input.lines.map(&:chomp).map { |line| line.split('') }
-    @grid.each_with_index do |line, y|
-      line.each_with_index do |char, x|
-        if char != nil && char[0] != '-'
-          area, perimeter = score(char, x, y)
-          result += area * perimeter
-        end
-      end
-    end
-
-    result
+  def valid?(x, y)
+    x.between?(0, grid[0].size - 1) && y.between?(0, grid.size - 1)
   end
 end
 
