@@ -32,11 +32,10 @@ class Solution
     corners = count_corners(char, position)
     grid[position[1]][position[0]] = "-#{char}"
 
-    DIRECTIONS.dup.each do |direction|
+    DIRECTIONS.each do |direction|
       new_position = position.zip(direction).map(&:sum)
-      neighbor = valid?(new_position) ? grid.dig(*new_position.reverse) : nil
 
-      if neighbor == char
+      if match?(char, position, direction)
         next_area, next_corners = measure(new_position)
         area += next_area
         corners += next_corners
@@ -48,10 +47,10 @@ class Solution
 
   def count_corners(char, position)
     DIRECTIONS.each_with_index.sum do |direction, index|
-      offsets = [direction, DIRECTIONS[index-1]]
+      adjacent = [direction, DIRECTIONS[index-1]]
       diagonal = CORNER_POSITIONS[index]
       match = proc { |offset| match?(char, position, offset) }
-      (offsets.none?(&match) || (offsets.all?(&match) && !match.call(diagonal))) ? 1 : 0
+      adjacent.none?(&match) || (adjacent.all?(&match) && !match.call(diagonal)) ? 1 : 0
     end
   end
 
