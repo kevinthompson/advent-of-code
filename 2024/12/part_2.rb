@@ -16,7 +16,7 @@ class Solution
   def call
     grid.each_with_index.sum do |line, y|
       line.each_with_index.sum do |char, x|
-        area, corners = score([x, y])
+        area, corners = measure([x, y])
         area * corners
       end
     end
@@ -24,7 +24,7 @@ class Solution
 
   private
 
-  def score(position)
+  def measure(position)
     char = grid.dig(*position.reverse)
     return [0, 0] if char.nil? || char[0] == '-'
     
@@ -37,7 +37,7 @@ class Solution
       neighbor = valid?(new_position) ? grid.dig(*new_position.reverse) : nil
 
       if neighbor == char
-        next_area, next_corners = score(new_position)
+        next_area, next_corners = measure(new_position)
         area += next_area
         corners += next_corners
       end
