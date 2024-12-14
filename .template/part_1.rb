@@ -9,12 +9,11 @@ class Solution
     @input = input
   end
 
-  def call
+  def result
     # TODO: implement solution
   end
 end
 
-# Run solution against example and input
 solve example: EXAMPLE_RESULT do |input|
-  Solution.new(input:).call
+  Solution.new(input:).result
 end
