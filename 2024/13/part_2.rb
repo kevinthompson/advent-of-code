@@ -1,6 +1,6 @@
 require_relative('../../lib/support')
 
-EXAMPLE_RESULT = 480
+EXAMPLE_RESULT = nil
 
 class Solution
   attr_reader :input
@@ -14,6 +14,9 @@ class Solution
       a, b, prize = machine.split("\n").map do |str|
         str.scan(/\d+/).map(&:to_i)
       end
+
+      prize[0] += 10000000000000
+      prize[1] += 10000000000000
 
       y = (a[0] * prize[1] - a[1] * prize[0]) / ((a[0] * b[1]) - (a[1] * b[0]))
       x = (prize[0] - b[0] * y) / a[0]
