@@ -12,9 +12,8 @@ class Solution
   end
 
   def result
-    width = context == :input ? 101 : 11
-    height = context == :input ? 103 : 7
-    grid_size = width * height
+    width = context == :example ? 11 : 101
+    height = context == :example ? 7 : 103
 
     bots = input.scan(/(-?\d+),(-?\d+)/).each_slice(2).map do |(pos, vel)|
       [Vector[*pos.map(&:to_i)], Vector[*vel.map(&:to_i)]]
@@ -22,8 +21,7 @@ class Solution
 
     100.times do
       bots.each do |bot|
-        pos = bot[0] + bot[1]
-        bot[0] = Vector[pos[0] % width, pos[1] % height]
+        bot[0] += bot[1]
       end
     end
     
@@ -33,22 +31,13 @@ class Solution
     ymid = height/2
 
     bots.each do |bot|
-      x = bot[0][0]
-      y = bot[0][1]
+      x = bot[0][0] % width
+      y = bot[0][1] % height
 
-      if y < ymid
-        if x < xmid
-          quadrants[0] += 1
-        elsif x > xmid
-          quadrants[1] += 1
-        end
-      elsif y > ymid
-        if x < xmid
-          quadrants[2] += 1
-        elsif x > xmid
-          quadrants[3] += 1
-        end
-      end
+      quadrants[0] += 1 if y < ymid && x < xmid
+      quadrants[1] += 1 if y < ymid && x > xmid
+      quadrants[2] += 1 if y > ymid && x < xmid
+      quadrants[3] += 1 if y > ymid && x > xmid
     end
 
     quadrants.reduce(:*)
