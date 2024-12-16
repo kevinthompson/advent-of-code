@@ -6,7 +6,7 @@ def solve(example: nil)
 
   unless example.nil?
     puts 'Running solution against example data...'.yellow
-    result = yield(File.read("#{dir}/example.txt"))
+    result = yield(File.read("#{dir}/example.txt"), :example)
 
     if result == example
       puts 'Success!'.green
@@ -20,7 +20,7 @@ def solve(example: nil)
   end
 
   puts 'Running solution against input data...'.yellow
-  puts "Result: #{yield(File.read("#{dir}/input.txt"))}"
+  puts "Result: #{yield(File.read("#{dir}/input.txt"), :input)}"
   puts "\n"
 end
 
