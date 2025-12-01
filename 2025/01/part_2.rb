@@ -10,26 +10,25 @@ class Solution
   end
 
   def result
-    answer = 0
     value = 50
-
-    lines = input.split
-    lines.each do |line|
-      dir = line[0]
-      sign = dir == 'R' ? 1 : -1
+    input.split.reduce(0) do |sum, line|
+      dir = line[0] == 'L' ? -1 : 1
       amount = line[1..].to_i
+      sum += amount / 100
+      amount %= 100
+
       amount.times do
-        value = (value + sign) % 100
+        value = (value + dir) % 100
 
         if value.zero?
-          answer += 1
+          sum += 1
         elsif value.negative?
           value += 100
         end
       end
-    end
 
-    answer
+      sum
+    end
   end
 end
 
