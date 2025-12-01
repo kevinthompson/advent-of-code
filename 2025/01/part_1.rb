@@ -16,12 +16,12 @@ class Solution
     lines = input.split
     lines.each do |line|
       dir = line[0]
-      amount = line[1..-1].to_i
-      amount *= -1 if dir == "L"
+      amount = line[1..].to_i
+      amount *= -1 if dir == 'L'
       value += amount % 100
-      value += 100 if value < 0
+      value += 100 if value.negative?
       value -= 100 if value >= 100
-      answer += 1 if value == 0
+      answer += 1 if value.zero?
     end
 
     answer

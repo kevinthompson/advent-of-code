@@ -16,14 +16,14 @@ class Solution
     lines = input.split
     lines.each do |line|
       dir = line[0]
-      sign = dir == "R" ? 1 : -1
-      amount = line[1..-1].to_i
+      sign = dir == 'R' ? 1 : -1
+      amount = line[1..].to_i
       amount.times do
         value = (value + sign) % 100
 
-        if value == 0
+        if value.zero?
           answer += 1
-        elsif value < 0
+        elsif value.negative?
           value += 100
         end
       end

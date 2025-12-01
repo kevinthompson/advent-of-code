@@ -1,8 +1,10 @@
+AllCops:
+  TargetRubyVersion: 3.3
 Metrics/AbcSize:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
-Naming/MethodParameterName
+Naming/MethodParameterName:
   Enabled: false
 Style/Documentation:
   Enabled: false

@@ -27,11 +27,11 @@ end
 def draw_grid(grid)
   system 'clear'
   grid.chars.each_with_index do |char, i|
-    print "\n" if i > 0 && i % WIDTH == 0
+    print "\n" if i.positive? && (i % WIDTH).zero?
     case char
-    when 'O'; print char.fg(:black).bg(:yellow)
-    when 'X'; print char.fg(:aqua)
-    when '#'; print char.fg(:white)
+    when 'O' then print char.fg(:black).bg(:yellow)
+    when 'X' then print char.fg(:aqua)
+    when '#' then print char.fg(:white)
     else; print char.fg(:darkslategray)
     end
   end
