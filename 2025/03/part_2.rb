@@ -10,17 +10,15 @@ class Solution
   end
 
   def result
-    input.split.map do |bank|
-      ibank = bank.chars.map(&:to_i)
-      bsize = ibank.size
+    banks = input.split.map { |bank| bank.chars.map(&:to_i) }
+    banks.map do |bank|
       start = 0
 
-      12.times.map do |i|
-        offset = bsize - 12 + i
-        subset = ibank[start..offset]
-        value = subset.max
-        start += subset.index(value) + 1
-        value
+      12.downto(1).map do |i|
+        subset = bank[start..(bank.size - i)]
+        subset.max.tap do |value|
+          start += subset.index(value) + 1
+        end
       end.join.to_i
     end.sum
   end
