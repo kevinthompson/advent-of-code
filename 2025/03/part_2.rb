@@ -10,17 +10,18 @@ class Solution
   end
 
   def result
+    digits = 12
     banks = input.split.map { |bank| bank.chars.map(&:to_i) }
-    banks.map do |bank|
+    banks.sum do |bank|
       start = 0
 
-      12.downto(1).map do |i|
+      digits.downto(1).map do |i|
         subset = bank[start..(bank.size - i)]
         subset.max.tap do |value|
           start += subset.index(value) + 1
         end
       end.join.to_i
-    end.sum
+    end
   end
 end
 

@@ -10,13 +10,18 @@ class Solution
   end
 
   def result
-    input.split.map do |bank|
-      ibank = bank.chars.map(&:to_i)
-      tens = ibank[0..-2].max
-      tens_index = ibank.index(tens)
-      ones = ibank[(tens_index + 1)..-1].max
-      [tens, ones].join.to_i
-    end.sum
+    digits = 2
+    banks = input.split.map { |bank| bank.chars.map(&:to_i) }
+    banks.sum do |bank|
+      start = 0
+
+      digits.downto(1).map do |i|
+        subset = bank[start..(bank.size - i)]
+        subset.max.tap do |value|
+          start += subset.index(value) + 1
+        end
+      end.join.to_i
+    end
   end
 end
 
