@@ -26,6 +26,9 @@ task :new, [:name] do
     File.open("#{destination}/input.txt", 'wb') { |file| file.write(response.body) }
   end
 
+  # Open browser to exercise
+  `open https://adventofcode.com/#{year}/day/#{day}`
+
   # Run Guard
   Rake::Task[:watch].invoke
 end
