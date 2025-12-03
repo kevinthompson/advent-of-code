@@ -14,7 +14,7 @@ def solve(example: nil)
 
     if result == example
       puts 'Success!'.green
-      puts "#{time.truncate(2)}s"
+      puts "#{(time * 1000).truncate(2)}ms"
     else
       puts 'Error! Result does not match expected answer.'.red
       puts "Expected: #{example}"
@@ -29,6 +29,6 @@ def solve(example: nil)
   time = Benchmark.realtime do
     puts "#{'Answer:'.green} #{yield(File.read("#{dir}/input.txt"), :input)}"
   end
-  puts "#{time.truncate(2)}s"
+  puts "#{(time * 1000).truncate(2)}ms"
   puts "\n"
 end
