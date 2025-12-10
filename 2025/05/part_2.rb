@@ -16,27 +16,28 @@ class Solution
     end
 
     loop do
-      changes = 0
+      new_ranges = Set.new
 
       ranges.each do |range|
-        (ranges.dup - [range]).each do |other|
+        overlapping = false
+
+        ranges.each do |other|
+          next if range == other
           next unless range.overlap?(other)
 
+          overlapping = true
           first = [range.first, other.first].min
           last = [range.last, other.last].max
-
-          ranges.delete(range)
-          ranges.delete(other)
-          ranges << (first..last)
-
-          changes += 1
+          new_ranges << Range.new(first, last)
           break
         end
 
-        break if changes.positive?
+        new_ranges << range unless overlapping
       end
 
-      break if changes.zero?
+      break if new_ranges.size == ranges.size
+
+      ranges = new_ranges
     end
 
     ranges.sum(&:size)
