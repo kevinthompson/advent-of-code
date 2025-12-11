@@ -1,4 +1,6 @@
 require 'faraday'
+require 'rainbow/refinement'
+using Rainbow
 
 TEMPLATE_DIRECTORY = '.template'.freeze
 COOKIE_PATH = "#{__dir__}/.cookie".freeze
@@ -17,11 +19,6 @@ task :next, [:open_in_browser] do |t, args|
   # Determine new directory
   year = Time.new.year
   day = Dir["#{year}/**"].count + 1
-  destination = "#{year}/#{day.to_s.rjust(2, '0')}"
-
-  # Duplicate template
-  FileUtils.mkdir_p(year.to_s)
-  FileUtils.cp_r(TEMPLATE_DIRECTORY, destination)
 
   # Get input
   if File.exist?(COOKIE_PATH)
@@ -33,7 +30,22 @@ task :next, [:open_in_browser] do |t, args|
     )
 
     response = connection.get("#{year}/day/#{day}/input")
-    File.open("#{destination}/input.txt", 'wb') { |file| file.write(response.body) }
+
+    if response.success?
+      destination = "#{year}/#{day.to_s.rjust(2, '0')}"
+
+      # Duplicate template
+      FileUtils.mkdir_p(year.to_s)
+      FileUtils.cp_r(TEMPLATE_DIRECTORY, destination)
+
+      # Write input data
+      File.open("#{destination}/input.txt", 'wb') { |file| file.write(response.body) }
+    else
+      puts "Error! The exercise for December #{day}, #{year} is not available.".red
+      print response.body
+    end
+  else
+    puts 'Error! Cookie not found.'.red
   end
 
   # Open browser to exercise
