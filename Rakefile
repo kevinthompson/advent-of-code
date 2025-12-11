@@ -3,7 +3,17 @@ require 'faraday'
 TEMPLATE_DIRECTORY = '.template'.freeze
 COOKIE_PATH = "#{__dir__}/.cookie".freeze
 
-task :new, [:name] do
+task :new do
+  # Fetch next exercise
+  Rake::Task[:next].invoke(open_in_browser: true)
+
+  # Run Guard
+  Rake::Task[:watch].invoke
+end
+
+task :next, [:open_in_browser] do |t, args|
+  args.with_defaults(open_in_browser: false)
+
   # Determine new directory
   year = Time.new.year
   day = Dir["#{year}/**"].count + 1
@@ -27,10 +37,7 @@ task :new, [:name] do
   end
 
   # Open browser to exercise
-  `open https://adventofcode.com/#{year}/day/#{day}`
-
-  # Run Guard
-  Rake::Task[:watch].invoke
+  `open https://adventofcode.com/#{year}/day/#{day}` if args.open_in_browser
 end
 
 task :watch do
